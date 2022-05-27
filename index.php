@@ -1,8 +1,14 @@
 <?php
-    //connecting to MySQL
+/*
     $host = 'sql310.epizy.com';
     $user = 'epiz_31815620';
     $password = 'y8j2vgsp';
+    $database = 'epiz_31815620_shop';*/
+
+    //connecting to MySQL
+    $host = 'localhost';
+    $user = 'root';
+    $password = '';
     $database = 'epiz_31815620_shop';
     $connection = mysqli_connect($host, $user, $password, $database);
 ?>
@@ -17,9 +23,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id='header'>
-        <h1>Product list</h1><input type="button" value="ADD"><input type="button" value="MASS DELETE" > 
-    </div>    
+    <h1>Product list</h1><a href="add-product.php" class="add">ADD</a><a href="#" class="mass_delete">MASS DELETE</a>   
     <hr color='black'>
 <?php  
     if( !$connection ) {
@@ -28,29 +32,42 @@
         exit();
     }
 
-    if( !($result = mysqli_query($connection, 'SELECT * FROM `product`;')) ) {
+    if( !($result = mysqli_query($connection, 'SELECT * FROM `products` INNER JOIN `categories` ON (products.category_id = categories.category_id);')) ) {
         echo 'Product list is empty!';
         exit();
     }
+    $counter = 0;
+    $products_per_line = 5;
+    echo '<table>';
     while( $array = mysqli_fetch_assoc($result) ) {
+        if( $counter % $products_per_line == 0 ) {
+            echo '</tr><tr>';
+        }
+        $counter++;
+        echo '<td>';
         echo '<input type="checkbox" class="delete-checkbox"><br>';
         echo 'SKU: ' . $array['sku'] . '<br>';
         echo $array['name'] . '<br>';
         echo $array['price'] . '$<br>';
         $properties_result = mysqli_query($connection, 'SELECT * FROM `properties_values` WHERE `sku`="' . $array['sku'] . '";');
         $properties_array = mysqli_fetch_assoc($properties_result);
-        if( $array['category_id'] == 1 ) {
+        if( $array['category_name'] == 'DVD' ) {
             echo 'Size: ' . $properties_array['property_value'] . 'MB<br>';
         }
-        if( $array['category_id'] == 2 ) {
+        if( $array['category_name'] == 'Book' ) {
             echo 'Weight: ' . $properties_array['property_value'] . 'KG<br>';
         }
-        if( $array['category_id'] == 3 ) {
-
-            echo 'Size: ' . $properties_array['property_value'] . 'MB<br>';
+        if( $array['category_name'] == 'Furniture' ) {
+            $height = $properties_array['property_value'];
+            $properties_array = mysqli_fetch_assoc($properties_result);
+            $width = $properties_array['property_value'];
+            $properties_array = mysqli_fetch_assoc($properties_result);
+            $length = $properties_array['property_value'];
+            echo 'Dismensions: ' . $height . 'x' . $width . 'x' . $length . '<br>';
         }
-        echo '<hr>';
+        echo '</td>';
     }
+    echo '</tr></table>';
 
     mysqli_close($connection);
 
