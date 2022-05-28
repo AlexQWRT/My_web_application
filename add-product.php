@@ -103,6 +103,11 @@
         }
 
     </style>
+    <script>
+        function choice() {
+            document.getElementById();
+        }
+    </script>
 </head>
 <body>
     <h1>Product Add</h1>
@@ -123,50 +128,76 @@
         <table>
             <tr>
                 <td>SKU:</td>
-                <td><input type="text" name="sku" required></td>
+                <td><input type="text" name="sku" required <?php if(isset($_POST['sku'])) echo 'value="' . $_POST['sku'] . '"'; ?>></td>
             </tr>
             <tr>
                 <td>Name:</td>
-                <td><input type="text" name="name" required></td>
+                <td><input type="text" name="name" required <?php if(isset($_POST['name'])) echo 'value="' . $_POST['name'] . '"'; ?>></td>
             </tr>
             <tr>
                 <td>Price ($):</td>
-                <td><input type="text" name="price" required></td>
+                <td><input type="text" name="price" required <?php if(isset($_POST['price'])) echo 'value="' . $_POST['price'] . '"'; ?>></td>
             </tr>
             <tr>
                 <td>Type switcher:</td>
                 <td>
-                    <select name="category" id="productType" required onchange="">
-                        <option value="0" selected></option>
+                    <form action="add-product.php" method="post">
+                    <select name="category" id="productType" required onchange="this.form.submit()">
                         <?php
                             $result = mysqli_query($connection, 'SELECT * FROM `categories`;');
                             while( $array = mysqli_fetch_assoc($result) ) {
-                                echo '<option value="' . $array['category_id'] . '" id="' . $array['category_name'] . '">' . $array['category_name'] . '</option>';
+                                echo '<option value="' . $array['category_id'] . '" id="' . $array['category_name'] . '"';
+                                if (isset($_POST['category']) and $_POST['category'] == $array['category_id']) echo ' selected';
+                                echo '>' . $array['category_name'] . '</option>';
                             }
                         ?>
                     </select>
+                    </form>
                 </td>
             </tr>
-            <span id=""><tr>
-                <td>Size (MB):</td>
-                <td><input type="text" name="size" required></td>
-            </tr>
-            <tr>
-                <td>Weight (KG):</td>
-                <td><input type="text" name="weight" required></td>
-            </tr>
-            <tr>
-                <td>Height (CM):</td>
-                <td><input type="text" name="heiht" required></td>
-            </tr>
-            <tr>
-                <td>Width (CM):</td>
-                <td><input type="text" name="width" required></td>
-            </tr>
-            <tr>
-                <td>Length (CM):</td>
-                <td><input type="text" name="length" required></td>
-            </tr>
+            <?php
+                if (!isset($_POST['category'])) {
+                    echo '
+                    <tr>
+                        <td>Size (MB):</td>
+                        <td><input type="text" name="size" required></td>
+                    </tr>
+                    ';
+                    exit();
+                }
+                if ($_POST['category'] == 1) {
+                    echo '
+                    <tr>
+                        <td>Size (MB):</td>
+                        <td><input type="text" name="size" required></td>
+                    </tr>
+                    ';
+                }
+                else if ($_POST['category'] == 2) {
+                    echo '
+                    <tr>
+                        <td>Weight (KG):</td>
+                        <td><input type="text" name="weight" required></td>
+                    </tr>
+                    ';
+                }
+                else if ($_POST['category'] == 3) {
+                    echo '
+                    <tr>
+                        <td>Height (CM):</td>
+                        <td><input type="text" name="height" required></td>
+                    </tr>
+                    <tr>
+                        <td>Width (CM):</td>
+                        <td><input type="text" name="width" required></td>
+                    </tr>
+                    <tr>
+                        <td>Length (CM):</td>
+                        <td><input type="text" name="length" required></td>
+                    </tr>
+                    ';
+                }
+            ?>
         </table>
 
         <?php
