@@ -136,22 +136,36 @@
             <tr>
                 <td>Type switcher:</td>
                 <td>
-                    <select name="category" id="productType" required>
+                    <select name="category" id="productType" required onchange="">
                         <option value="0" selected></option>
                         <?php
                             $result = mysqli_query($connection, 'SELECT * FROM `categories`;');
                             while( $array = mysqli_fetch_assoc($result) ) {
-                                echo '<option value="' . $array['category_id'] . '">' . $array['category_name'] . '</option>';
+                                echo '<option value="' . $array['category_id'] . '" id="' . $array['category_name'] . '">' . $array['category_name'] . '</option>';
                             }
                         ?>
                     </select>
                 </td>
             </tr>
-        </table>
-        <table>
-            <tr>
+            <span id=""><tr>
                 <td>Size (MB):</td>
                 <td><input type="text" name="size" required></td>
+            </tr>
+            <tr>
+                <td>Weight (KG):</td>
+                <td><input type="text" name="weight" required></td>
+            </tr>
+            <tr>
+                <td>Height (CM):</td>
+                <td><input type="text" name="heiht" required></td>
+            </tr>
+            <tr>
+                <td>Width (CM):</td>
+                <td><input type="text" name="width" required></td>
+            </tr>
+            <tr>
+                <td>Length (CM):</td>
+                <td><input type="text" name="length" required></td>
             </tr>
         </table>
 
@@ -167,7 +181,7 @@
                 while( $categories = mysqli_fetch_assoc($categories_query) ) {
                     mysqli_query($connection, 'INSERT INTO `properties_values` (`property_id`, `property_value`, `sku`) VALUES ("'
                     . $categories['property_id'] . '", "'
-                    . $_POST['size'] . '", "'
+                    . $_POST[$categories['property_name']] . '", "'
                     . $_POST['sku'] . '");');
                 }
             }
