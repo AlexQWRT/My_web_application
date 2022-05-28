@@ -53,8 +53,10 @@
             padding: 0.1vw 0.5vw; 
             text-decoration: none; 
             color: #000000;
+            background-color: #ffffff;
             position: absolute;
             font-size: 2vw;
+            cursor: pointer;
         }
 
         input.add {
@@ -69,7 +71,7 @@
 
         input:hover {
             box-shadow: 0 0 0.1vw rgba(0,0,0,0.3);
-            background: linear-gradient(to bottom, #fcfff4, rgba(0,0,0,0.3));
+            background: #dedcdc;
         }
 
         input.delete-checkbox {
