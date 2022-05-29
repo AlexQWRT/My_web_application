@@ -82,18 +82,20 @@
         td {
             text-align: end;
             width: 50%;
+            padding: 0;
         }
         input.value, select.value {
             background-color: #fff3e0;
             border: 0.15vw solid #6e5227;
             border-radius: 0.3vw;
+            box-sizing: border-box;
             width: 100%;
             font-family: 'Ubuntu', sans-serif;
             font-size: 1vw;
             margin: 0;
         }
         select.value {
-            width: 102.5%;
+            margin: 0;
             cursor: pointer;
         }
         option {
