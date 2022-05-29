@@ -64,10 +64,13 @@
         }
         hr {
             width: 96%;
+            height: 0.1vw;
             margin-left: 2%;
             margin-right: 2%;
             margin-top: 0.3vw;
             margin-bottom: 0.7vw;
+            border: none; 
+            background-color: #6e5227;
             color: #6e5227;
         }
         table {
