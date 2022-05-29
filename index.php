@@ -21,87 +21,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
     <style>
-        h1 {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 3vw;
-            margin-top: 0;
-            margin-right: 0;
-            margin-bottom: 0;
-            margin-left: 0.5vw;
-            padding: 0;
-        }
-
-        hr {
-            margin: 0;
-            width: 98%;
-            left: 1%;
-            border: 0.2vw solid #000000;
-            position: relative;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 1vw;
-            padding: 0;
-            margin: 0;
-        }
-
-        input {
-            border: 0.2vw solid #000000;
-            border-radius: 0.7vw;
-            display: inline-block;
-            padding: 0.1vw 0.5vw; 
-            text-decoration: none; 
-            color: #000000;
-            background-color: #ffffff;
-            position: absolute;
-            font-size: 2vw;
-            cursor: pointer;
-        }
-
-        input.add {
-            top: 0.3vw;
-            right: 14.5vw;
-        }
-
-        input.mass_delete {
-            top: 0.3vw;
-            right: 0.5vw;
-        }
-
-        input:hover {
-            box-shadow: 0 0 0.1vw rgba(0,0,0,0.3);
-            background: #dedcdc;
-        }
-
-        input.delete-checkbox {
-            position: relative;
-            left: -8.5vw;
-            width: 1vw;
-            margin: 0;
-        }
-
-        table {
-            margin: 1%;
-            width: 98%;
-        }
-
-        td {
-            border: 0.2vw solid #000000;
-            border-radius: 0.8vw;
-            padding: 0.5vw;
-            text-align: center;
-            width: 20%
-        }
+        
     </style>
 </head>
 <body>
     <h1>Product list</h1>
-    <form action="add-product.php" method="post">
-        <input type="submit" class="add" value="ADD">
-    </form>
+    <a href="add-product.php"><button class="add">ADD"</button></a>
+    <button form="products" type="submit" name="delete" class="mass_delete">MASS DELETE</button>
     <form action="index.php" method="POST">
-        <input name="delete" type="submit" class="mass_delete" value="MASS DELETE">
         <hr color='black'>
         <?php  
             if( !$connection ) {
@@ -115,6 +42,22 @@
                     if (isset($_POST['product' . $i])) {
                         mysqli_query($connection, 'DELETE FROM products WHERE `products`.`sku` = "' . $_POST['product' . $i] . '"');
                     }
+                }
+            }
+
+            if (isset($_POST['sku'])) {
+                $categories_query = mysqli_query($connection, 'SELECT * FROM `properties` WHERE `category_id` = ' . $_POST['category'] . ';');
+
+                mysqli_query($connection, 'INSERT INTO `products` (`sku`, `name`, `price`, `category_id`) VALUES ("'
+                . $_POST['sku'] .'", "'
+                . $_POST['name'] . '", "'
+                . $_POST['price'] . '", "'
+                . $_POST['category'] . '");');
+                while( $categories = mysqli_fetch_assoc($categories_query) ) {
+                    mysqli_query($connection, 'INSERT INTO `properties_values` (`property_id`, `property_value`, `sku`) VALUES ("'
+                    . $categories['property_id'] . '", "'
+                    . $_POST[$categories['property_name']] . '", "'
+                    . $_POST['sku'] . '");');
                 }
             }
 
