@@ -1,14 +1,7 @@
 <?php
-/*
     $host = 'sql310.epizy.com';
     $user = 'epiz_31815620';
     $password = 'y8j2vgsp';
-    $database = 'epiz_31815620_shop';*/
-
-    //connecting to MySQL
-    $host = 'localhost';
-    $user = 'root';
-    $password = '';
     $database = 'epiz_31815620_shop';
     $connection = mysqli_connect($host, $user, $password, $database);
 ?>
@@ -82,7 +75,9 @@
         td {
             text-align: end;
             width: 50%;
-            padding: 0;
+        }
+        td.hint {
+            text-align: center;
         }
         input.value, select.value {
             background-color: #fff3e0;
@@ -107,7 +102,7 @@
     <div class="body">
         <span class="head">Product Add</span>
         <div class="buttons">
-            <a href="index.php"><button class="cancel">CANCEL</button></a>
+            <a href="index.php"><button class="cancel">Cancel</button></a>
             <button class="save" onclick="validate()">Save</button>
         </div>
         <hr>
@@ -165,6 +160,10 @@
                 alert('Warning, ' + field_name + ' should be above zero!');
                 return false;
             }
+            if (document.getElementById(field_name).value >= 10000000) {
+                alert('Warning, ' + field_name + ' should be less than 10000000!');
+                return false;
+            }
             return true;
         }
         function validate() {
@@ -173,15 +172,15 @@
                 return false;
             }
             if (document.getElementById('sku').value.trim().length > 12) {
-                alert('SKU should be shorter than 12 characters!');
+                alert('SKU should be shorter than 13 characters!');
                 return false;
             }
             if (document.getElementById('name').value.trim().length < 1) {
                 alert('Name should not be empty!');
                 return false;
             }
-            if (document.getElementById('name').value.trim().length > 255) {
-                alert('Name should be shorter than 255 characters!');
+            if (document.getElementById('name').value.trim().length >= 100) {
+                alert('Name should be shorter than 100 characters!');
                 return false;
             }
             if (!isFinite(document.getElementById('price').value)) {
@@ -190,6 +189,10 @@
             }
             if (document.getElementById('price').value <= 0) {
                 alert('Price should be above zero!');
+                return false;
+            }
+            if (document.getElementById('price').value >= 10000000) {
+                alert('Price should be less than 10000000!');
                 return false;
             }
             switch(document.getElementById('productType').value) {
@@ -215,15 +218,18 @@
             let where = document.getElementById('properties');
             switch(document.getElementById('productType').value) {
                 case '1':
-                    where.innerHTML = '<tr><td>Size (MB):</td><td><input type="text" name="size" class="value" id="size" required></td></tr>';
+                    where.innerHTML = '<tr><td>Size (MB):</td><td><input type="text" name="size" class="value" id="size" required></td></tr>' +
+                    '<tr><td></td><td class="hint">Please, provide size</td></tr>';
                     break;
                 case '2':
-                    where.innerHTML = '<tr><td>Weight (KG):</td><td><input type="text" name="weight" class="value" id="weight" required></td></tr>';
+                    where.innerHTML = '<tr><td>Weight (KG):</td><td><input type="text" name="weight" class="value" id="weight" required></td></tr>' +
+                    '<tr><td></td><td class="hint">Please, provide weight</td></tr>';
                     break;
                 case '3':
                     where.innerHTML = '<tr><td>Height (CM):</td><td><input type="text" name="height" class="value" id="height" required></td></tr>' +
                     '<tr><td>Width (CM):</td><td><input type="text" name="width" class="value" id="width" required></td></tr>' +
-                    '<tr><td>Length (CM):</td><td><input type="text" name="length" class="value" id="length" required></td></tr>';
+                    '<tr><td>Length (CM):</td><td><input type="text" name="length" class="value" id="length" required></td></tr>' +
+                    '<tr><td></td><td class="hint">Please, provide dimensions</td></tr>';
                     break;
             }
             return;

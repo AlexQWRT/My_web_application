@@ -1,14 +1,7 @@
 <?php
-/*
     $host = 'sql310.epizy.com';
     $user = 'epiz_31815620';
     $password = 'y8j2vgsp';
-    $database = 'epiz_31815620_shop';*/
-
-    //connecting to MySQL
-    $host = 'localhost';
-    $user = 'root';
-    $password = '';
     $database = 'epiz_31815620_shop';
     $connection = mysqli_connect($host, $user, $password, $database);
 ?>
@@ -81,12 +74,16 @@
         }
         td {
             width: 20%;
+            vertical-align: top;
+            padding-bottom: 0.2vw;
             background-color: #fff3e0;
             border: 0.15vw solid #6e5227;
             border-radius: 0.7vw;
         }
         div.table_text {
             text-align: center;
+            padding: 0 0.2vw;
+            height:100%;
         }
         input.delete-checkbox {
             width: 1vw;
@@ -95,7 +92,7 @@
 </head>
 <body>
     <div class="body">
-        <span class="head">Product list</span>
+        <span class="head">Product List</span>
         <div class="buttons">
             <a href="add-product.php"><button class="add">ADD</button></a>
             <button form="products" type="submit" name="delete" class="mass_delete">MASS DELETE</button>
@@ -133,7 +130,7 @@
                     }
                 }
 
-                if( !($result = mysqli_query($connection, 'SELECT * FROM `products` INNER JOIN `categories` ON (products.category_id = categories.category_id);')) ) {
+                if( !($result = mysqli_query($connection, 'SELECT * FROM `products` INNER JOIN `categories` ON (products.category_id = categories.category_id) ORDER BY `sku`;')) ) {
                     echo 'Product list is empty!';
                     exit();
                 }
