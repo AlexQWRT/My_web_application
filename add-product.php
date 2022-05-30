@@ -102,8 +102,8 @@
     <div class="body">
         <span class="head">Product Add</span>
         <div class="buttons">
-            <a href="index.php"><button class="cancel">Cancel</button></a>
             <button class="save" onclick="validate()">Save</button>
+            <a href="index.php"><button class="cancel">Cancel</button></a>
         </div>
         <hr>
         <form action="index.php" method="post" id="product_form">
