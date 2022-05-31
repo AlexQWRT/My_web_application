@@ -4,6 +4,9 @@
     $password = 'y8j2vgsp';
     $database = 'epiz_31815620_shop';
     $connection = mysqli_connect($host, $user, $password, $database);
+    if (!empty($_POST)) {
+        header('location:/');
+    }
 ?>
 
 <!DOCTYPE html>
@@ -98,7 +101,7 @@
             <button form="products" type="submit" name="delete" class="mass_delete">MASS DELETE</button>
         </div>
         <hr>
-        <form action="index.php" method="POST" id="products">
+        <form action="/" method="POST" id="products">
             <?php  
                 if( !$connection ) {
                     echo 'Failed to connect to database!<br>';

@@ -96,6 +96,9 @@
         option {
             font-size: 0.9vw;
         }
+        input:invalid {
+            box-shadow: 0.1vw 0.1vw 0.1vw red;
+        }
     </style>
 </head>
 <body onload="properties_output()">
@@ -106,7 +109,7 @@
             <a href="index.php"><button class="cancel">Cancel</button></a>
         </div>
         <hr>
-        <form action="index.php" method="post" id="product_form">
+        <form action="/" method="post" id="product_form">
             <?php  
                 if( !$connection ) {
                     echo 'Failed to connect to database!<br>';
@@ -117,15 +120,15 @@
             <table>
                 <tr>
                     <td>SKU:</td>
-                    <td><input type="text" name="sku" class="value" id="sku" required ></td>
+                    <td><input type="text" name="sku" class="value" id="sku" maxlength="12" pattern="^[a-zA-Z0-9]+$" required ></td>
                 </tr>
                 <tr>
                     <td>Name:</td>
-                    <td><input type="text" name="name" class="value" id="name" required ></td>
+                    <td><input type="text" name="name" class="value" id="name" maxlength="100" pattern="^[a-zA-Z0-9;,. -]+$" required ></td>
                 </tr>
                 <tr>
                     <td>Price ($):</td>
-                    <td><input type="text" name="price" class="value" id="price" required ></td>
+                    <td><input type="text" name="price" class="value" id="price" maxlength="8" pattern="\d+(\.\d{2})?" required ></td>
                 </tr>
                 <tr>
                     <td>Type switcher:</td>
@@ -152,47 +155,26 @@
 </body>
 <script>
         function validate_field(field_name) {
-            if (!isFinite(document.getElementById(field_name).value)) {
-                alert('Warning, ' + field_name + ' should be numeric!');
+            if (!document.getElementById(field_name).validity.valid) {
+                alert('Warning, "' + field_name + '" filed length should be less or equals 8 characters and contain numbers with 2 numbers after daught)!');
                 return false;
             }
-            if (document.getElementById(field_name).value <= 0) {
-                alert('Warning, ' + field_name + ' should be above zero!');
-                return false;
-            }
-            if (document.getElementById(field_name).value >= 10000000) {
-                alert('Warning, ' + field_name + ' should be less than 10000000!');
+            if (document.getElementById(field_name).value == 0) {
+                alert('"Warning,' + field_name + '" filed length should be above zero!');
                 return false;
             }
             return true;
         }
         function validate() {
-            if (document.getElementById('sku').value.trim().length < 1) {
-                alert('SKU should not be empty!');
+            if (!document.getElementById('sku').validity.valid) {
+                alert('"SKU" filed length should be less or equals 12 characters and contain only English letters and numbers!');
                 return false;
             }
-            if (document.getElementById('sku').value.trim().length > 12) {
-                alert('SKU should be shorter than 13 characters!');
+            if (!document.getElementById('name').validity.valid) {
+                alert('"Name" filed length should be less or equals 100 characters and contain only English letters, numbers, spaces and some special characters (;,.-)!');
                 return false;
             }
-            if (document.getElementById('name').value.trim().length < 1) {
-                alert('Name should not be empty!');
-                return false;
-            }
-            if (document.getElementById('name').value.trim().length >= 100) {
-                alert('Name should be shorter than 100 characters!');
-                return false;
-            }
-            if (!isFinite(document.getElementById('price').value)) {
-                alert('Price should be numeric!');
-                return false;
-            }
-            if (document.getElementById('price').value <= 0) {
-                alert('Price should be above zero!');
-                return false;
-            }
-            if (document.getElementById('price').value >= 10000000) {
-                alert('Price should be less than 10000000!');
+            if (!validate_field('price')) {
                 return false;
             }
             switch(document.getElementById('productType').value) {
@@ -214,22 +196,30 @@
             }
             document.getElementById('product_form').submit();
         }
+
+        function create_property(property_name, field_name, message) {
+            return '<tr><td>' + field_name + ':</td><td><input type="text" name="' + property_name + 
+                   '" class="value" id="' + property_name + '" maxlength="8" pattern="\\d+(\\.\\d{2})?" required></td></tr>';
+        }
+        function create_message(message) {
+            return '<tr><td></td><td class="hint">' + message + '</td></tr>';
+        }
         function properties_output() {
             let where = document.getElementById('properties');
             switch(document.getElementById('productType').value) {
                 case '1':
-                    where.innerHTML = '<tr><td>Size (MB):</td><td><input type="text" name="size" class="value" id="size" required></td></tr>' +
-                    '<tr><td></td><td class="hint">Please, provide size</td></tr>';
+                    where.innerHTML = create_property('size', 'Size (MB)') +
+                                      create_message('Please, provide size');
                     break;
                 case '2':
-                    where.innerHTML = '<tr><td>Weight (KG):</td><td><input type="text" name="weight" class="value" id="weight" required></td></tr>' +
-                    '<tr><td></td><td class="hint">Please, provide weight</td></tr>';
+                    where.innerHTML = create_property('weight', 'Weight (KG)') +
+                                      create_message('Please, provide weight');
                     break;
                 case '3':
-                    where.innerHTML = '<tr><td>Height (CM):</td><td><input type="text" name="height" class="value" id="height" required></td></tr>' +
-                    '<tr><td>Width (CM):</td><td><input type="text" name="width" class="value" id="width" required></td></tr>' +
-                    '<tr><td>Length (CM):</td><td><input type="text" name="length" class="value" id="length" required></td></tr>' +
-                    '<tr><td></td><td class="hint">Please, provide dimensions</td></tr>';
+                    where.innerHTML = create_property('height', 'Height (CM)') +
+                                      create_property('width', 'Width (CM)') +
+                                      create_property('length', 'Length (CM)') +
+                                      create_message('Please, provide dimensions');
                     break;
             }
             return;
@@ -237,4 +227,3 @@
         
     </script>
 </html>
-
